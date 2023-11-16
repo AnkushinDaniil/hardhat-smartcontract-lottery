@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # lottery
 =======
 # Lottery
@@ -20,4 +20,3 @@ Kindly ensure to update tests as needed.
 ## License
 
 [MIT](https://choosealicense.com/licenses/mit/)
->>>>>>> 12d93aa (new version of lottery)
