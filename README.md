@@ -1,6 +1,3 @@
-
-# lottery
-=======
 # Lottery
 
 Lottery is a smart contract enabling players to participate in a trustless, decentralized lottery.
