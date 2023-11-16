@@ -1,0 +1,11 @@
+<<<<<<< HEAD
+.DS_Store
+node_modules
+=======
+node_modules
+yarn-error.log
+cache
+artifacts
+.vscode
+.env
+>>>>>>> 12d93aa (new version of lottery)
