@@ -96,6 +96,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bytes calldata /* checkData */
     )
         public
+        view
         override
         returns (bool _upkeepNeeded, bytes memory /* performData */)
     {
@@ -163,7 +164,7 @@ contract Lottery is VRFConsumerBaseV2, KeeperCompatibleInterface {
         return s_players[_playerIndex];
     }
 
-    function getRecentWinnet() public view returns (address) {
+    function getRecentWinner() public view returns (address) {
         return s_recentWinner;
     }
 

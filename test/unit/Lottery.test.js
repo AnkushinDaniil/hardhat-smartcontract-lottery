@@ -4,11 +4,6 @@ const {
     networkConfig,
 } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
-const { decodeBytes32String, zeroPadBytes, EtherSymbol } = require("ethers")
-const {
-    Bytecode,
-} = require("hardhat/internal/hardhat-network/stack-traces/model")
-const { boolean } = require("hardhat/internal/core/params/argumentTypes")
 
 !developmentChains.includes(network.name)
     ? describe.skip
@@ -19,7 +14,6 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes")
               deployer,
               interval
           const chainId = network.config.chainId
-          const VRF_SUB_FUND_AMOUNT = ethers.parseEther("2")
 
           beforeEach(async () => {
               deployer = (await getNamedAccounts()).deployer
@@ -206,6 +200,7 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes")
               it("picks a winner, resets the lottery and sends money", async () => {
                   const additionalEntrants = 3
                   const startingAccountIndex = 1
+                  let winnerStartingBalance
                   const accounts = await ethers.getSigners()
                   for (
                       let i = startingAccountIndex;
@@ -221,19 +216,90 @@ const { boolean } = require("hardhat/internal/core/params/argumentTypes")
                   }
                   const startingTimestamp = await lottery.getLatestTimestamp()
                   await new Promise(async (resolve, reject) => {
-                      lottery.once("WinnerPicked", () => {
+                      lottery.once("WinnerPicked", async () => {
+                          //   console.log("WinnerPicked event fired")
                           try {
+                              const recentWinner =
+                                  await lottery.getRecentWinner()
+                              //   console.log(recentWinner)
+                              //   console.log("------------------")
+                              //   for (
+                              //       let i = startingAccountIndex;
+                              //       i < startingAccountIndex + additionalEntrants;
+                              //       i++
+                              //   ) {
+                              //       console.log(accounts[i].address)
+                              //   }
+                              const lotteryState =
+                                  await lottery.getLotteryState()
+                              const endingTimeStamp =
+                                  await lottery.getLatestTimestamp()
+                              const numPlayers =
+                                  await lottery.getNumberOfPlayers()
+                              const winnerEndingBalance =
+                                  await ethers.provider.getBalance(
+                                      accounts[startingAccountIndex],
+                                  )
+                              assert.equal(numPlayers.toString(), "0")
+                              assert.equal(lotteryState.toString(), "0")
+                              assert(endingTimeStamp > startingTimestamp)
+                              assert.equal(
+                                  winnerEndingBalance,
+                                  winnerStartingBalance +
+                                      lotteryEntranceFee *
+                                          BigInt(additionalEntrants) +
+                                      lotteryEntranceFee,
+                              )
                           } catch (error) {
                               reject(error)
                           }
                           resolve()
                       })
-                      const tx = await lottery.performUpkeep("0x")
-                      const txReceipt = await tx.wait(1)
-                      await vrfCoordinatorV2Mock.fulfillRandomWords(
-                          txReceipt.logs[1].args.requestId,
-                          lottery.target,
-                      )
+                      try {
+                          const tx = await lottery.performUpkeep("0x")
+                          const txReceipt = await tx.wait(1)
+                          winnerStartingBalance =
+                              await ethers.provider.getBalance(
+                                  accounts[startingAccountIndex],
+                              )
+                          await vrfCoordinatorV2Mock.fulfillRandomWords(
+                              txReceipt.logs[1].args.requestId,
+                              lottery.target,
+                          )
+                      } catch (error) {
+                          reject(error)
+                      }
+                  })
+              })
+          })
+          describe("getters", async () => {
+              beforeEach(async () => {
+                  await lottery.enterLottery({ value: lotteryEntranceFee })
+                  await network.provider.send("evm_increaseTime", [
+                      Number(interval) + 1,
+                  ])
+                  await network.provider.send("evm_mine", [])
+              })
+              it("getNumWords", async () => {
+                  assert.equal(await lottery.getNumWords(), 1)
+              })
+              it("getRequestConfirmations", async () => {
+                  assert.equal(await lottery.getRequestConfirmations(), 3)
+              })
+              it("getSubsctiptionId", async () => {
+                  const transactionResponse =
+                      await vrfCoordinatorV2Mock.createSubscription()
+                  vrfCoordinatorV2Mock.once("SubscriptionCreated", async () => {
+                      try {
+                          const transactionReceipt =
+                              await transactionResponse.wait()
+                          subId = transactionReceipt.logs[0].args.subId
+                          subId--
+                          assert.equal(await lottery.getSubsctiptionId(), subId)
+                      } catch (error) {
+                          reject(error)
+                      }
+                      resolve()
                   })
               })
           })
