@@ -50,6 +50,6 @@ module.exports = {
         },
     },
     mocha: {
-        timeout: 500000, // 300 seconds
+        timeout: 500000, // 500 seconds
     },
 }
