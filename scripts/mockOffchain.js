@@ -6,11 +6,20 @@ async function mockKeepers() {
     const checkData = ethers.keccak256(ethers.toUtf8Bytes(""))
     const { _upkeepNeeded: upkeepNeeded } =
         await lottery.checkUpkeep.staticCall(checkData)
-    // console.log(upkeepNeeded)
-    console.log(await lottery.getLotteryState())
-    console.log(await lottery.getLatestTimestamp())
-    console.log(await lottery.getNumberOfPlayers())
-    console.log(upkeepNeeded)
+    console.log(
+        `Lottery state is ${(await lottery.getLotteryState()).toString()}`,
+    )
+    console.log(
+        `Latest timestamp is ${(
+            await lottery.getLatestTimestamp()
+        ).toString()}`,
+    )
+    console.log(
+        `Current number of players is ${(
+            await lottery.getNumberOfPlayers()
+        ).toString()}`,
+    )
+    console.log(`upkeepNeeded = ${upkeepNeeded.toString()}`)
     if (upkeepNeeded) {
         const tx = await lottery.performUpkeep(checkData)
         const txReceipt = await tx.wait(1)

@@ -1,23 +1,26 @@
 {
-  "devDependencies": {
-    "@chainlink/contracts": "^0.8.0",
-    "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
-    "@nomicfoundation/hardhat-ethers": "^3.0.5",
-    "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
-    "@nomiclabs/hardhat-etherscan": "^3.1.7",
-    "chai": "^4.3.10",
-    "dotenv": "^16.3.1",
-    "ethers": "^6.8.1",
-    "hardhat": "^2.19.1",
-    "hardhat-contract-sizer": "^2.10.0",
-    "hardhat-deploy": "^0.11.43",
-    "hardhat-deploy-ethers": "^0.4.1",
-    "hardhat-gas-reporter": "^1.0.9",
-    "hardhat-shorthand": "^1.0.0",
-    "mocha": "^10.2.0",
-    "prettier": "^3.1.0",
-    "prettier-plugin-solidity": "^1.2.0",
-    "solhint": "^4.0.0",
-    "solidity-coverage": "^0.8.5"
-  }
+    "devDependencies": {
+        "@chainlink/contracts": "^0.8.0",
+        "@nomicfoundation/hardhat-chai-matchers": "^2.0.2",
+        "@nomicfoundation/hardhat-ethers": "^3.0.5",
+        "@nomiclabs/hardhat-ethers": "npm:hardhat-deploy-ethers",
+        "@nomiclabs/hardhat-etherscan": "^3.1.7",
+        "chai": "^4.3.10",
+        "dotenv": "^16.3.1",
+        "ethers": "^6.8.1",
+        "hardhat": "^2.19.1",
+        "hardhat-contract-sizer": "^2.10.0",
+        "hardhat-deploy": "^0.11.43",
+        "hardhat-deploy-ethers": "^0.4.1",
+        "hardhat-gas-reporter": "^1.0.9",
+        "hardhat-shorthand": "^1.0.0",
+        "mocha": "^10.2.0",
+        "prettier": "^3.1.0",
+        "prettier-plugin-solidity": "^1.2.0",
+        "solhint": "^4.0.0",
+        "solidity-coverage": "^0.8.5"
+    },
+    "scripts": {
+        "win:localhost": "hh run scripts/mockOffchain.js --network localhost"
+    }
 }

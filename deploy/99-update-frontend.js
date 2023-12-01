@@ -7,8 +7,8 @@ const FRONT_END_ABI_FILE = "../nextjs-smartcontract-lottery/constants/abi.json"
 
 module.exports = async () => {
     if (process.env.UPDATE_FRONT_END) {
-        updateContractAdresses()
-        updateContractAbi()
+        await updateContractAdresses()
+        await updateContractAbi()
     }
 }
 
