@@ -1,5 +1,5 @@
 # Lottery
-Lottery is a smart contract enabling players to participate in a trustless, decentralized lottery.
+Lottery is a smart contract enabling players to participate in a trustless, decentralized lottery. Created using [random generator](https://vrf.chain.link/) and [automation](https://automation.chain.link/) oracles.
 
 ## Frontend for this smart contract: https://github.com/AnkushinDaniil/lottery-frontend
 
